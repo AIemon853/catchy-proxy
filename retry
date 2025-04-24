@@ -1,0 +1,27 @@
+api/generate.ts
+export default async function handler(req, res) {
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    return res.status(200).end();
+  }
+
+  const { prompt } = req.body;
+
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer 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",
+    },
+    body: JSON.stringify({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 300,
+    }),
+  });
+
+  const data = await response.json();
+  res.status(200).json(data);
+}
